@@ -59,10 +59,12 @@ public class Player : MonoBehaviour
 
     private void CheckForSlide()
     {
-        if (slideTimeCounter < 0;)
+        if (slideTimeCounter < 0)
         {
             isSliding = false;
         }
+    }
+
 
     private void Movement()
     {
