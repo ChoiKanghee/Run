@@ -11585,11 +11585,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ccf3bb13d9f6dc4d8994b71e9886ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 0
   moveSpeed: 12
   jumpForce: 18
   doubleJumpForce: 15
+  slideSpeed: 20
+  slideTime: 0.4
+  slideCooldown: 1
   groundCheckDistance: 1.4
+  ceillingCheckDistance: 1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
