@@ -34,6 +34,18 @@ public class Player : MonoBehaviour
     private bool wallDetected;
     private bool ceillingDetected;
 
+    [HideInInspector] public bool ledgeDetected;
+
+    [Header("Ledge Info")]
+    [SerializeField] private Vector2 offset1; //offset khi dang treo
+    [SerializeField] private Vector2 offset2; // offset sai khi leo len
+
+    private Vector2 climbBegunPosition;
+    private Vector2 climbOverPosition;
+
+    private bool canGrabLedge = true;
+    private bool canClimb;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +73,35 @@ public class Player : MonoBehaviour
         CheckInput();
 
     }
+
+    private void CheckForLedge()
+    {
+        if (ledgeDetected && canGrabLedge)
+        {
+            canGrabLedge = false;
+            
+            Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
+
+            climbBegunPosition = ledgePosition + offset1;
+            climbOverPosition = ledgePosition + offset2;
+
+            canClimb = true;
+        }
+
+        if (canClimb)
+        {
+            transform.position = climbBegunPosition;
+        }
+    }
+
+    private void LedgeClimbOver()
+    {
+        canClimb = false;
+        transform.position = climbOverPosition;
+        Invoke("AllowLedgeGrab", .1f);
+    }
+
+    private void AllowLedgeGrab() => canGrabLedge = true;
 
     private void CheckForSlide()
     {
@@ -136,6 +177,7 @@ public class Player : MonoBehaviour
         anim.SetBool("canDoubleJump", canDoubleJump);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isSliding", isSliding);
+        anim.SetBool("canClimb", canClimb);
     }
 
     private void CheckCollision()
@@ -146,12 +188,13 @@ public class Player : MonoBehaviour
         Debug.Log("Player Wall Detected: " + wallDetected);
         ceillingDetected = Physics2D.Raycast(transform.position, Vector2.up, ceillingCheckDistance, whatIsGround);
         Debug.Log("Player Ceilling Detected: " + ceillingDetected);
+        Debug.Log("Player Ledge Detected: " + ledgeDetected);
     }
 
     private void OnDrawGizmos()
     {
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawRay(transform.position, Vector2.down * groundCheckDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector2.down * groundCheckDistance);
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheckDistance));
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y + ceillingCheckDistance));
         Gizmos.DrawWireCube(wallCheck.position, wallCheckSize);
