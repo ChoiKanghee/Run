@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
 
         CheckForSlide();
         CheckInput();
-
+        CheckForLedge();
     }
 
     private void CheckForLedge()
@@ -89,9 +89,7 @@ public class Player : MonoBehaviour
         }
 
         if (canClimb)
-        {
             transform.position = climbBegunPosition;
-        }
     }
 
     private void LedgeClimbOver()
